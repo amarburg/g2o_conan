@@ -30,6 +30,7 @@ class G2OConan(ConanFile):
 
   def package(self):
     self.copy("*.h", src="g2o", dst="include")
+    self.copy("*.hpp", src="g2o", dst="include")
     self.copy("config.h", src="g2o", dst="include/g2o")
     if self.options.shared:
       if self.settings.os == "Macos":
