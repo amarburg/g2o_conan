@@ -3,7 +3,8 @@ import os
 
 class G2OConan(ConanFile):
   name = "g2o"
-  version = "0.1"
+  version = "master"
+  url = "https://github.com/amarburg/g2o_conan"
   settings = "os", "compiler", "build_type", "arch"
   options = {'shared': [True, False]}
 
@@ -15,7 +16,10 @@ class G2OConan(ConanFile):
 
   def build(self):
     cmake = CMake(self.settings)
-    cmake_opts = "-DBUILD_SHARED_LIBS=True" if self.options.shared
+
+    if self.options.shared:
+      cmake_opts = "-DBUILD_SHARED_LIBS=True"
+
     self.run('cmake "%s/g2o" %s %s' % (self.conanfile_directory, cmake.command_line, cmake_opts ))
     self.run('cmake --build . %s' % cmake.build_config)
 
