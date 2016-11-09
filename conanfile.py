@@ -6,7 +6,7 @@ class G2OConan(ConanFile):
   version = "master"
   url = "https://github.com/amarburg/g2o_conan"
   settings = "os", "compiler", "build_type", "arch"
-  options = {"shared": [True, False]} # Values can be True or False (number or string value is also possible)
+  options = {"shared": [True, False]} 
   default_options = "shared=True"
 
   def source(self):
