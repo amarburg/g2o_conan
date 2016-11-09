@@ -17,6 +17,8 @@ class G2OConan(ConanFile):
 
   def build(self):
     cmake = CMake(self.settings)
+    cmake_opts = ""
+    build_opts = ""
 
     if self.options.shared:
       cmake_opts = "-DBUILD_SHARED_LIBS=True"
