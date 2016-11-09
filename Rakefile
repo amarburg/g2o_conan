@@ -1,7 +1,7 @@
 
 task :default => "debug:test"
 
-@build_opts = {}
+@conan_opts = { shared: 'True', build_parallel: 'False' }
 load 'config.rb' if FileTest::exists? 'config.rb'
 
 ['Debug','Release'].each { |build_type|
@@ -11,7 +11,7 @@ load 'config.rb' if FileTest::exists? 'config.rb'
     task :build do
       FileUtils::mkdir build_dir unless FileTest::directory? build_dir
 
-      cmake_opts = ["-o shared=True"]
+      cmake_opts = @conan_opts.each_pair.map { |key,val| "-o %s=%s" % [key,val] }
 
       sh "conan source ."
 

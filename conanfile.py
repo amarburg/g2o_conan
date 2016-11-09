@@ -6,8 +6,8 @@ class G2OConan(ConanFile):
   version = "master"
   url = "https://github.com/amarburg/g2o_conan"
   settings = "os", "compiler", "build_type", "arch"
-  options = {"shared": [True, False]}
-  default_options = "shared=True"
+  options = {"shared": [True, False], "build_parallel": [True, False]}
+  default_options = "shared=True", "build_parallel=True"
 
   def source(self):
     if os.path.isdir('g2o'):
@@ -15,23 +15,22 @@ class G2OConan(ConanFile):
     else:
       self.run('git clone https://github.com/RainerKuemmerle/g2o.git')
 
-  def imports(self):
-    self.copy("*.dll", dst="bin", src="bin") # From bin to bin
-    self.copy("*.dylib*", dst="bin", src="lib") # From lib to bin
-    self.copy("*.h", dst="include/g2o/", src="g2o")
-
   def build(self):
     cmake = CMake(self.settings)
 
     if self.options.shared:
       cmake_opts = "-DBUILD_SHARED_LIBS=True"
 
+    if self.options.build_parallel:
+      build_opts = "-- -j"
+
     self.run('cmake "%s/g2o" %s %s' % (self.conanfile_directory, cmake.command_line, cmake_opts ))
-    self.run('cmake --build . %s' % cmake.build_config)
+    self.run('cmake --build . %s %s' % (cmake.build_config, build_opts))
 
 
   def package(self):
-    self.copy("*.h", dst="")
+    self.copy("*.h", src="g2o", dst="include")
+    self.copy("config.h", src="g2o", dst="include/g2o")
     if self.options.shared:
       if self.settings.os == "Macos":
           self.copy(pattern="*.dylib", dst="lib", keep_path=False)
