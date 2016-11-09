@@ -6,14 +6,19 @@ class G2OConan(ConanFile):
   version = "master"
   url = "https://github.com/amarburg/g2o_conan"
   settings = "os", "compiler", "build_type", "arch"
-  options = {"shared": [True, False]} 
+  options = {"shared": [True, False]}
   default_options = "shared=True"
 
   def source(self):
     if os.path.isdir('g2o'):
-      self.run('git update g2o')
+      self.run('cd g2o && git pull origin master')
     else:
       self.run('git clone https://github.com/RainerKuemmerle/g2o.git')
+
+  def imports(self):
+    self.copy("*.dll", dst="bin", src="bin") # From bin to bin
+    self.copy("*.dylib*", dst="bin", src="lib") # From lib to bin
+    self.copy("*.h", dst="include/g2o/", src="g2o")
 
   def build(self):
     cmake = CMake(self.settings)
