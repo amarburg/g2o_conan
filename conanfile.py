@@ -6,7 +6,8 @@ class G2OConan(ConanFile):
   version = "master"
   url = "https://github.com/amarburg/g2o_conan"
   settings = "os", "compiler", "build_type", "arch"
-  options = {'shared': [True, False]}
+  options = {"shared": [True, False]} # Values can be True or False (number or string value is also possible)
+  default_options = "shared=True"
 
   def source(self):
     if os.path.isdir('g2o'):
@@ -23,15 +24,16 @@ class G2OConan(ConanFile):
     self.run('cmake "%s/g2o" %s %s' % (self.conanfile_directory, cmake.command_line, cmake_opts ))
     self.run('cmake --build . %s' % cmake.build_config)
 
+
   def package(self):
     self.copy("*.h", dst="")
-    #if self.options.shared:
-    if self.settings.os == "Macos":
-        self.copy(pattern="*.dylib", dst="lib", keep_path=False)
+    if self.options.shared:
+      if self.settings.os == "Macos":
+          self.copy(pattern="*.dylib", dst="lib", keep_path=False)
+      else:
+          self.copy(pattern="*.so*", dst="lib", src="lib", keep_path=False)
     else:
-        self.copy(pattern="*.so*", dst="lib", src="lib", keep_path=False)
-    #else:
-    #    self.copy(pattern="*.a", dst="lib", src="lib", keep_path=False)
+        self.copy(pattern="*.a", dst="lib", src="lib", keep_path=False)
 
   # def package_info(self):
   #     self.cpp_info.libs = ["videoio"]
