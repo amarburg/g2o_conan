@@ -52,4 +52,4 @@ class G2OConan(ConanFile):
                           "g2o_opengl_helper_d", "g2o_types_sclam2d_d", "g2o_parser_d", "g2o_types_sim3_d",\
                            "g2o_simulator_d", "g2o_types_slam2d_addons_d", "g2o_solver_cholmod_d",\
                             "g2o_types_slam2d_d", "g2o_solver_csparse_d", "g2o_types_slam3d_addons_d",\
-                             "libg2o_solver_dense_d", "libg2o_types_slam3d_d"]
+                             "g2o_solver_dense_d", "g2o_types_slam3d_d"]
