@@ -1,30 +1,28 @@
 
-task :default => "debug:test"
+task :default => "debug:build"
 
 @conan_opts = { shared: 'True', build_parallel: 'False' }
-load 'config.rb' if FileTest::exists? 'config.rb'
+@conan_settings = {}
+@conan_scopes = { build_tests: 'True' }
+@conan_build = "missing"
+load 'config.rb' if FileTest.readable? 'config.rb'
 
 ['Debug','Release'].each { |build_type|
   namespace build_type.downcase.to_sym do
     build_dir = ENV['BUILD_DIR'] || "build-#{build_type}"
 
+    @conan_settings[:build_type] = build_type
+    conan_opts = @conan_opts.each_pair.map { |key,val| "-o %s=%s" % [key,val] } +
+                @conan_settings.each_pair.map { |key,val| "-s %s=%s" % [key,val] } +
+                @conan_scopes.each_pair.map { |key,val| "--scope %s=%s" % [key,val] }
+
     task :build do
       FileUtils::mkdir build_dir unless FileTest::directory? build_dir
-
-      cmake_opts = @conan_opts.each_pair.map { |key,val| "-o %s=%s" % [key,val] }
-
       sh "conan source ."
-
       chdir build_dir do
-        sh "conan install -s build_type=%s %s .. --build=missing" % [build_type, cmake_opts.join(' ')]
+        sh "conan install %s .. --build=%s" % [conan_opts.join(' '), @conan_build]
         sh "conan build .."
       end
-    end
-
-    task :test => :build do
-      chdir build_dir do
-      #sh "make unit_test"
-    end
     end
 
   end
@@ -57,13 +55,12 @@ namespace :dependencies do
   namespace :travis do
     task :linux => "dependencies:trusty"
     task :osx => "dependencies:osx" do
-      ## Technically the compiler version should be taken from Travis.yml is known
-      File.open("config.rb",'w') { |f|
+      ## Let's see what minimal configuration I can get away with
+      mkdir "~/.conan" unless FileTest::directory? "~/.conan"
+      File.open("~/.conan/conan.conf",'w') { |f|
         f.write <<CONAN_CONF_END
-@conan_opts[:compiler] = 'apple-clang'
-#@conan_opts['compiler.version'.to_sym] = '7.3'
+compiler=apple-clang
 CONAN_CONF_END
-      }
     end
   end
 end
