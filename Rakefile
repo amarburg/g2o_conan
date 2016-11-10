@@ -1,5 +1,5 @@
 
-task :default => "debug:build"
+task :default => "debug:test"
 
 @conan_opts = { shared: 'True', build_parallel: 'False' }
 @conan_settings = {}
@@ -25,6 +25,9 @@ load 'config.rb' if FileTest.readable? 'config.rb'
       end
     end
 
+    task :test => :build do
+      #
+    end
   end
 }
 
