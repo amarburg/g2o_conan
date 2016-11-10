@@ -49,7 +49,8 @@ namespace :dependencies do
   task :osx do
     sh "brew update"
     # sh "brew tap homebrew/science"
-    sh "brew install conan eigen"
+    sh "brew install eigen"
+    sh "pip install conan"
   end
 
   namespace :travis do
