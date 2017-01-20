@@ -25,6 +25,12 @@ load 'config.rb' if FileTest.readable? 'config.rb'
       end
     end
 
+    task :clean do
+      chdir build_dir do
+        sh "make clean"
+      end
+    end
+
     task :test => :build do
       #
     end
