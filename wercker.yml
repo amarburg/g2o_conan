@@ -1,17 +1,17 @@
 # wercker version for box creation
-box: amarburg/lsdslam-dev-host
+box: amarburg/lsdslam-dev-host:conan-latest
 
 build:
   steps:
-    - install-packages:
-      packages: python-pip
-
-    - script:
-      name: Install Conan
-      code: pip install conan
 
     - script:
       name: Debug test
       code: |
            rake debug:test
            make clean
+
+    - script:
+      name: Upload to conan.io
+      code: |
+        conan user -p "$CONAN_PASSWORD" $CONAN_USERNAME
+        conan upload "*@amarburg/testing" --confirm
