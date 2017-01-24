@@ -14,4 +14,4 @@ build:
       name: Upload to conan.io
       code: |
         conan user -p "$CONAN_PASSWORD" $CONAN_USERNAME
-        conan upload "*@amarburg/testing" --confirm
+        conan upload "g2o*" --confirm
