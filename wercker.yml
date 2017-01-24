@@ -8,7 +8,7 @@ build:
       name: Debug test
       code: |
            rake debug:test
-           make clean
+           rake debug:clean
 
     - script:
       name: Upload to conan.io
