@@ -24,7 +24,7 @@ class G2OConan(ConanFile):
       cmake_opts = "-DBUILD_SHARED_LIBS=True"
 
     if self.options.build_parallel:
-      build_opts = "-- -j"
+      build_opts = "-- -j4"
 
     self.run('cmake "%s/g2o" %s %s' % (self.conanfile_directory, cmake.command_line, cmake_opts ))
     self.run('cmake --build . %s %s' % (cmake.build_config, build_opts))
@@ -38,9 +38,9 @@ class G2OConan(ConanFile):
       if self.settings.os == "Macos":
           self.copy(pattern="*.dylib", dst="lib", keep_path=False)
       else:
-          self.copy(pattern="*.so*", dst="lib", src="lib", keep_path=False)
+          self.copy(pattern="lib*.so*", dst="lib", src="lib", keep_path=False)
     else:
-        self.copy(pattern="*.a", dst="lib", src="lib", keep_path=False)
+        self.copy(pattern="lib*.a", dst="lib", src="lib", keep_path=False)
 
   def package_info(self):
     ## I'm sure there's a much more compact python-ism for this (I could write the one-liner in Ruby...)
