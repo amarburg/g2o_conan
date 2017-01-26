@@ -8,10 +8,11 @@ build:
       name: Debug test
       code: |
            rake debug:test
-           make clean
+           rake debug:clean
 
     - script:
       name: Upload to conan.io
       code: |
         conan user -p "$CONAN_PASSWORD" $CONAN_USERNAME
-        conan upload "*@amarburg/testing" --confirm
+        conan export amarburg/testing
+        conan upload "g2o*" --confirm
